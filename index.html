@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wi-Fi Connect</title>
+</head>
+
+<body>
+
+    <h1>Office Wi-Fi</h1>
+
+    <p>Network: <span id="ssid"></span></p>
+
+    <img id="qr" width="300">
+
+    <script>
+
+        fetch('wifi.json')
+        .then(response => response.json())
+        .then(data => {
+
+            document.getElementById("ssid").innerText = data.ssid;
+
+            const wifiText =
+                `WIFI:T:${data.security};S:${data.ssid};P:${data.password};;`;
+
+            document.getElementById("qr").src =
+                "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+                encodeURIComponent(wifiText);
+
+        });
+
+    </script>
+
+</body>
+</html>
