@@ -1,36 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Meeting Room Wi-Fi</title>
 
     <style>
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+
             margin: 0;
+
             padding: 0;
+
             font-family: Arial, sans-serif;
 
             background: linear-gradient(
-                135deg,
-                #0f172a,
-                #1e293b
+                    135deg,
+                    #0f172a,
+                    #1e3a8a
             );
 
-            height: 100vh;
+            min-height: 100vh;
 
             display: flex;
+
             justify-content: center;
+
             align-items: center;
         }
 
         .card {
 
-            width: 500px;
+            width: 420px;
 
-            background: white;
+            background: #ffffff;
 
             border-radius: 20px;
 
@@ -38,58 +51,121 @@
 
             text-align: center;
 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
         .logo {
 
             width: 140px;
 
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         h1 {
 
-            color: #1e293b;
+            margin: 10px 0;
 
-            margin-bottom: 10px;
+            color: #0f172a;
+
+            font-size: 28px;
         }
 
-        p {
+        .subtitle {
 
-            color: #555;
+            color: #666;
+
+            margin-bottom: 20px;
         }
 
         .qr {
 
-            width: 260px;
+            width: 250px;
 
-            margin: 20px 0;
+            height: 250px;
+
+            margin-bottom: 20px;
         }
 
         .info {
 
-            background: #f5f5f5;
-
-            padding: 15px;
+            background: #f3f4f6;
 
             border-radius: 12px;
+
+            padding: 15px;
 
             text-align: left;
 
             font-size: 18px;
         }
 
-        .footer {
+        .row {
+
+            margin-bottom: 12px;
+        }
+
+        .label {
+
+            font-weight: bold;
+
+            color: #1e293b;
+        }
+
+        .value {
+
+            color: #111827;
+        }
+
+        button {
+
+            margin-top: 15px;
+
+            padding: 12px 20px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+
+            background: #1d4ed8;
+        }
+
+        .support {
 
             margin-top: 20px;
 
-            color: #888;
+            color: #555;
 
             font-size: 14px;
         }
 
+        @media (max-width: 500px) {
+
+            .card {
+
+                width: 95%;
+            }
+
+            .qr {
+
+                width: 220px;
+
+                height: 220px;
+            }
+        }
+
     </style>
+
 </head>
 
 <body>
@@ -98,25 +174,55 @@
 
     <img src="logo.png" class="logo">
 
-    <h1>Welcome to MYK</h1>
+    <h1 id="companyName">
+        Company
+    </h1>
 
-    <p>Scan the QR code to connect to Wi-Fi</p>
+    <div class="subtitle">
 
-    <img id="wifiQR" class="qr">
-
-    <div class="info">
-
-        <b>SSID:</b> MYKL-Meeting-Room
-
-        <br><br>
-
-        <b>Password:</b> Welcome@123
+        Scan the QR code below to connect to Wi-Fi
 
     </div>
 
-    <div class="footer">
+    <img id="wifiQR"
+         class="qr">
 
-        For assistance, contact the IT Team
+    <div class="info">
+
+        <div class="row">
+
+            <span class="label">
+                SSID:
+            </span>
+
+            <span class="value"
+                  id="ssid">
+            </span>
+
+        </div>
+
+        <div class="row">
+
+            <span class="label">
+                Password:
+            </span>
+
+            <span class="value"
+                  id="password">
+            </span>
+
+        </div>
+
+    </div>
+
+    <button onclick="copyPassword()">
+
+        Copy Password
+
+    </button>
+
+    <div class="support"
+         id="support">
 
     </div>
 
@@ -124,23 +230,46 @@
 
 <script>
 
-    const wifi = {
+fetch('wifi.json')
 
-        ssid: "MYKL-Meeting-Room",
+.then(response => response.json())
 
-        password: "Welcome@123",
+.then(data => {
 
-        security: "WPA"
-    };
+    document.getElementById('companyName').innerText =
+        data.company;
 
-    const qrText =
-        `WIFI:T:${wifi.security};S:${wifi.ssid};P:${wifi.password};;`;
+    document.getElementById('ssid').innerText =
+        data.ssid;
 
-    document.getElementById("wifiQR").src =
-        "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
-        encodeURIComponent(qrText);
+    document.getElementById('password').innerText =
+        data.password;
+
+    document.getElementById('support').innerText =
+        data.support;
+
+    const wifiText =
+        `WIFI:T:${data.security};S:${data.ssid};P:${data.password};;`;
+
+    document.getElementById('wifiQR').src =
+        'https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=' +
+        encodeURIComponent(wifiText);
+
+});
+
+function copyPassword() {
+
+    const password =
+        document.getElementById('password').innerText;
+
+    navigator.clipboard.writeText(password);
+
+    alert('Password copied successfully.');
+
+}
 
 </script>
 
 </body>
+
 </html>
