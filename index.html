@@ -1,35 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Wi-Fi Connect</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meeting Room Wi-Fi</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b
+            );
+
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+
+            width: 500px;
+
+            background: white;
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+
+            width: 140px;
+
+            margin-bottom: 15px;
+        }
+
+        h1 {
+
+            color: #1e293b;
+
+            margin-bottom: 10px;
+        }
+
+        p {
+
+            color: #555;
+        }
+
+        .qr {
+
+            width: 260px;
+
+            margin: 20px 0;
+        }
+
+        .info {
+
+            background: #f5f5f5;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            text-align: left;
+
+            font-size: 18px;
+        }
+
+        .footer {
+
+            margin-top: 20px;
+
+            color: #888;
+
+            font-size: 14px;
+        }
+
+    </style>
 </head>
 
 <body>
 
-    <h1>Office Wi-Fi</h1>
+<div class="card">
 
-    <p>Network: <span id="ssid"></span></p>
+    <img src="logo.png" class="logo">
 
-    <img id="qr" width="300">
+    <h1>Welcome to Meeting Room</h1>
 
-    <script>
+    <p>Scan the QR code to connect to Wi-Fi</p>
 
-        fetch('wifi.json')
-        .then(response => response.json())
-        .then(data => {
+    <img id="wifiQR" class="qr">
 
-            document.getElementById("ssid").innerText = data.ssid;
+    <div class="info">
 
-            const wifiText =
-                `WIFI:T:${data.security};S:${data.ssid};P:${data.password};;`;
+        <b>SSID:</b> MYKL-Meeting-Room
 
-            document.getElementById("qr").src =
-                "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-                encodeURIComponent(wifiText);
+        <br><br>
 
-        });
+        <b>Password:</b> Welcome@123
 
-    </script>
+    </div>
+
+    <div class="footer">
+
+        For assistance, contact the IT Team
+
+    </div>
+
+</div>
+
+<script>
+
+    const wifi = {
+
+        ssid: "MYKL-Meeting-Room",
+
+        password: "Welcome@123",
+
+        security: "WPA"
+    };
+
+    const qrText =
+        `WIFI:T:${wifi.security};S:${wifi.ssid};P:${wifi.password};;`;
+
+    document.getElementById("wifiQR").src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
+        encodeURIComponent(qrText);
+
+</script>
 
 </body>
 </html>
